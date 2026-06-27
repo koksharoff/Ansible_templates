@@ -1,0 +1,13 @@
+#SPDX-License-Identifier: MIT-0
+---
+# name of user with sudo privileges to be created for bootstrap process
+system_bootstrap_user: "bootstrap_agent"
+
+# need user update cache for system packages
+system_bootstrap_update_cache: true
+
+# timezone to be set on the system
+system_bootstrap_timezone: "UTC"
+
+# Key for ssh access to the bootstrap user
+system_bootstrap_ssh_key: "ssh-rsa AAAAB3NzaC1yc ...." # example key, replace with your actual public key

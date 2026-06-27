@@ -1,0 +1,6 @@
+---
+
+# Paste here any variables that you want to be available to all hosts in your inventory. For example:
+# ansible_user: myuser  
+
+# these file more priority than the defaults in the role, so you can override them here if needed.

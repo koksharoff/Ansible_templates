@@ -1,0 +1,32 @@
+---
+- name: Update apt package cache
+  ansible.builtin.apt:
+    update_cache: "{{ system_bootstrap_update_cache }}"
+
+- name: Set system timezone
+  community.general.timezone:
+    name: "{{ system_bootstrap_timezone }}"
+  notify: "Restart cron"
+
+- name: Create system bootstrap user
+  ansible.builtin.user:
+    name: "{{ system_bootstrap_user }}"
+    state: present
+    shell: /bin/bash
+    create_home: true
+    groups: sudo
+    append: true
+    password: "{{ 'bootstrap_password' | password_hash('sha512') }}"
+
+- name: Allow bootstrap user to have passwordless sudo 
+  ansible.builtin.copy:
+    content: "{{ system_bootstrap_user }} ALL=(ALL) NOPASSWD:ALL"
+    dest: "/etc/sudoers.d/{{ system_bootstrap_user }}"
+    mode: "0440"
+    validate: '/usr/sbin/visudo -cf %s'
+
+- name: Add SSH key for bootstrap user
+  ansible.builtin.authorized_key:
+    user: "{{ system_bootstrap_user }}"
+    key: "{{ system_bootstrap_ssh_key }}"
+    state: present

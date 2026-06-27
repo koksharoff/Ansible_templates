@@ -1,0 +1,6 @@
+---
+- name: Deploy base system configuration
+  hosts: all
+  become: true
+  roles:
+    - system_bootstrap
