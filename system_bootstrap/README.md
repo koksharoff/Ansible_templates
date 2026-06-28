@@ -1,38 +1,38 @@
-Role Name
-=========
+# Ansible Role: System Bootstrap
 
-A brief description of the role goes here.
+This role performs the initial configuration on a clean Debian/Ubuntu server. It secures the system, updates package caches, configures timezones, and sets up a dedicated automation user.
 
-Requirements
-------------
+## Features
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+- Updates `apt` package cache.
+- Sets the system timezone and restarts `cron`.
+- Creates a dedicated bootstrap/automation user with a secure password hash.
+- Configures passwordless `sudo` access via a validated custom file in `/etc/sudoers.d/`.
+- Adds an authorized SSH public key for passwordless, secure access.
 
-Role Variables
---------------
+## Role Variables
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+Available variables are listed below, along with default values (see `defaults/main.yml`):
 
-Dependencies
-------------
+| Variable | Default Value | Description |
+| :--- | :--- | :--- |
+| `system_bootstrap_update_cache` | `true` | Whether to update the apt package cache. |
+| `system_bootstrap_timezone` | `"UTC"` | System timezone (e.g., `Europe/Moscow`). |
+| `system_bootstrap_user` | `"bootstrap_agent"` | The name of the automation user to create. |
+| `system_bootstrap_ssh_key` | `""` | The public SSH key to authorize for the bootstrap user. |
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+## Dependencies
 
-Example Playbook
-----------------
+None.
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+## Example Playbook
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+An example of how to use this role in a playbook (e.g., `deploy.yml`):
 
-License
--------
-
-BSD
-
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+```yaml
+---
+- name: Deploy base system configuration
+  hosts: all
+  become: true
+  roles:
+    - system_bootstrap
