@@ -1,0 +1,4 @@
+# Tooling for linting and CI: pip install -r requirements-dev.txt
+ansible-core>=2.15
+ansible-lint>=25.0
+yamllint>=1.35

@@ -241,11 +241,23 @@ Then:
 ## Linting
 
 ```bash
-pip install ansible-lint yamllint
+pip install -r requirements-dev.txt
 make lint
 ```
 
 The project passes `ansible-lint` with the `production` profile.
+
+### CI
+
+[`.github/workflows/lint.yml`](.github/workflows/lint.yml) runs on every push and pull request to `main`:
+
+| Job | Checks |
+| :--- | :--- |
+| `yamllint` | YAML formatting of the whole repository |
+| `ansible-lint` | Ansible best practices (`production` profile) |
+| `syntax-check` | `bootstrap.yml` and `site.yml` against each environment: dev, stage, prod |
+
+Run the same checks locally with `make lint` and `make syntax ENV=<env>` before pushing.
 
 ## License
 
