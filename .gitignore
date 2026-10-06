@@ -1,0 +1,20 @@
+# Ansible
+*.retry
+collections/
+.ansible/
+
+# Secrets - never commit the vault password
+.vault_pass
+.vault_pass*
+*.vault_pass
+
+# Python / tooling
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store

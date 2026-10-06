@@ -1,0 +1,54 @@
+---
+- name: Manage user accounts
+  ansible.builtin.user:
+    name: "{{ item.name }}"
+    comment: "{{ item.comment | default(omit) }}"
+    shell: "{{ item.shell | default(users_default_shell) }}"
+    groups: "{{ item.groups | default(users_default_groups) }}"
+    append: true
+    password: "{{ item.password_hash | default(omit) }}"
+    update_password: on_create
+    create_home: true
+    state: "{{ item.state | default('present') }}"
+    remove: "{{ users_remove_home if item.state | default('present') == 'absent' else omit }}"
+  loop: "{{ users_list }}"
+  loop_control:
+    label: "{{ item.name }} ({{ item.state | default('present') }})"
+
+- name: Manage authorized SSH keys
+  ansible.posix.authorized_key:
+    user: "{{ item.name }}"
+    key: "{{ item.ssh_keys | join('\n') }}"
+    exclusive: "{{ users_ssh_keys_exclusive }}"
+    state: present
+  loop: "{{ users_list }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when:
+    - item.ssh_keys is defined
+    - item.state | default('present') == 'present'
+
+# sudo ignores files in /etc/sudoers.d whose names contain a dot
+- name: Grant passwordless sudo
+  ansible.builtin.copy:
+    content: "{{ item.name }} ALL=(ALL:ALL) NOPASSWD: ALL\n"
+    dest: "/etc/sudoers.d/{{ item.name | replace('.', '_') }}"
+    owner: root
+    group: root
+    mode: "0440"
+    validate: /usr/sbin/visudo -cf %s
+  loop: "{{ users_list }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when:
+    - item.sudo_nopasswd | default(false) | bool
+    - item.state | default('present') == 'present'
+
+- name: Revoke passwordless sudo
+  ansible.builtin.file:
+    path: "/etc/sudoers.d/{{ item.name | replace('.', '_') }}"
+    state: absent
+  loop: "{{ users_list }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when: not (item.sudo_nopasswd | default(false) | bool) or item.state | default('present') == 'absent'

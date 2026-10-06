@@ -1,0 +1,57 @@
+---
+- name: Install UFW
+  ansible.builtin.apt:
+    name: ufw
+    state: present
+
+- name: Allow SSH
+  community.general.ufw:
+    rule: "{{ 'limit' if firewall_ssh_rate_limit else 'allow' }}"
+    port: "{{ firewall_ssh_port | string }}"
+    proto: tcp
+    src: "{{ item }}"
+    comment: "SSH"
+  loop: "{{ firewall_ssh_allowed_sources }}"
+
+- name: Allow TCP ports
+  community.general.ufw:
+    rule: allow
+    port: "{{ item | string }}"
+    proto: tcp
+  loop: "{{ firewall_allowed_tcp_ports }}"
+
+- name: Allow UDP ports
+  community.general.ufw:
+    rule: allow
+    port: "{{ item | string }}"
+    proto: udp
+  loop: "{{ firewall_allowed_udp_ports }}"
+
+- name: Apply custom rules
+  community.general.ufw:
+    rule: "{{ item.rule | default('allow') }}"
+    port: "{{ item.port | string }}"
+    proto: "{{ item.proto | default('tcp') }}"
+    src: "{{ item.src | default('any') }}"
+    dest: "{{ item.dest | default('any') }}"
+    comment: "{{ item.comment | default(omit) }}"
+  loop: "{{ firewall_rules }}"
+  loop_control:
+    label: "{{ item.rule | default('allow') }} {{ item.port }}/{{ item.proto | default('tcp') }} from {{ item.src | default('any') }}"
+
+- name: Set default policies
+  community.general.ufw:
+    default: "{{ item.policy }}"
+    direction: "{{ item.direction }}"
+  loop:
+    - { direction: incoming, policy: "{{ firewall_default_incoming }}" }
+    - { direction: outgoing, policy: "{{ firewall_default_outgoing }}" }
+    - { direction: routed, policy: "{{ firewall_default_routed }}" }
+
+- name: Set logging level
+  community.general.ufw:
+    logging: "{{ firewall_logging }}"
+
+- name: Enable or disable UFW
+  community.general.ufw:
+    state: "{{ 'enabled' if firewall_enabled else 'disabled' }}"

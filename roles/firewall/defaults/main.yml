@@ -1,0 +1,27 @@
+---
+firewall_enabled: true
+
+firewall_default_incoming: deny
+firewall_default_outgoing: allow
+firewall_default_routed: deny
+
+firewall_logging: "low"
+
+# SSH is always allowed before the default policy is applied
+firewall_ssh_port: 22
+# Restrict SSH to specific networks, e.g. a VPN or bastion. "any" = from everywhere.
+firewall_ssh_allowed_sources:
+  - any
+# Use "limit" (rate limiting: 6 connections / 30s per IP) instead of "allow"
+firewall_ssh_rate_limit: true
+
+# Simple port lists, open from anywhere
+firewall_allowed_tcp_ports: []
+firewall_allowed_udp_ports: []
+
+# Fine-grained rules. Example:
+# firewall_rules:
+#   - { port: 5432, proto: tcp, src: 10.0.0.0/24, comment: "PostgreSQL from app subnet" }
+#   - { port: 9100, proto: tcp, src: 10.0.1.5, comment: "node_exporter from Prometheus" }
+#   - { port: 8080, proto: tcp, rule: deny }
+firewall_rules: []

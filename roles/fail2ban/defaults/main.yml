@@ -1,0 +1,30 @@
+---
+fail2ban_bantime: "1h"
+fail2ban_findtime: "10m"
+fail2ban_maxretry: 5
+
+# Increase ban time for repeat offenders
+fail2ban_bantime_increment: true
+
+# Never ban these addresses (add your office/VPN/bastion networks)
+fail2ban_ignoreip:
+  - 127.0.0.1/8
+  - ::1
+
+# "systemd" works on all supported releases (Debian 12+ has no /var/log/auth.log by default)
+fail2ban_backend: systemd
+
+# Ban action. "ufw" matches the firewall role; use "nftables-multiport" without UFW.
+fail2ban_banaction: ufw
+
+fail2ban_sshd_enabled: true
+fail2ban_sshd_port: 22
+fail2ban_sshd_mode: normal
+
+# Extra jails. Every key except "name" is written as-is. Example:
+# fail2ban_jails:
+#   - name: nginx-http-auth
+#     enabled: "true"
+#     port: "http,https"
+#     logpath: /var/log/nginx/error.log
+fail2ban_jails: []

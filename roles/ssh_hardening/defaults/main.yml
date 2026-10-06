@@ -1,0 +1,37 @@
+---
+ssh_hardening_port: 22
+# Empty = listen on all addresses
+ssh_hardening_listen_addresses: []
+
+ssh_hardening_permit_root_login: "no"
+ssh_hardening_password_authentication: false
+ssh_hardening_kbd_interactive_authentication: false
+ssh_hardening_pubkey_authentication: true
+ssh_hardening_permit_empty_passwords: false
+
+ssh_hardening_max_auth_tries: 3
+ssh_hardening_max_sessions: 10
+ssh_hardening_login_grace_time: 30
+ssh_hardening_client_alive_interval: 300
+ssh_hardening_client_alive_count_max: 2
+
+ssh_hardening_x11_forwarding: false
+ssh_hardening_allow_tcp_forwarding: false
+ssh_hardening_allow_agent_forwarding: false
+
+ssh_hardening_log_level: VERBOSE
+
+# Restrict who may log in. Empty = no restriction.
+# If set, the user Ansible connects with MUST be included (the role checks this).
+ssh_hardening_allow_users: []
+ssh_hardening_allow_groups: []
+
+# Optional crypto overrides. Empty = OpenSSH defaults of the distribution,
+# which are already modern on Ubuntu 22.04+/Debian 12+.
+ssh_hardening_ciphers: []
+ssh_hardening_macs: []
+ssh_hardening_kex_algorithms: []
+
+# Drop-in file. The "00-" prefix makes it win over cloud-init's 50-cloud-init.conf,
+# because sshd uses the first value it reads for each option.
+ssh_hardening_config_file: /etc/ssh/sshd_config.d/00-hardening.conf

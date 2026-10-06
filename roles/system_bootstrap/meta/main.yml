@@ -1,0 +1,21 @@
+---
+galaxy_info:
+  author: Vyacheslav Koksharov
+  description: First-run setup of a fresh Debian/Ubuntu server - python, automation user, SSH key and sudo
+  license: MIT
+  min_ansible_version: "2.15"
+  platforms:
+    - name: Ubuntu
+      versions:
+        - jammy
+        - noble
+    - name: Debian
+      versions:
+        - bookworm
+        - trixie
+  galaxy_tags:
+    - system
+    - bootstrap
+    - security
+
+dependencies: []

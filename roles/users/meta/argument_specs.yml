@@ -1,0 +1,58 @@
+---
+argument_specs:
+  main:
+    short_description: Manage local user accounts
+    options:
+      users_list:
+        type: list
+        elements: dict
+        default: []
+        description: Accounts to manage.
+        options:
+          name:
+            type: str
+            required: true
+            description: Login name.
+          state:
+            type: str
+            choices: [present, absent]
+            default: present
+            description: Whether the account should exist.
+          comment:
+            type: str
+            description: GECOS / full name.
+          shell:
+            type: str
+            description: Login shell. Defaults to users_default_shell.
+          groups:
+            type: list
+            elements: str
+            description: Supplementary groups. Defaults to users_default_groups.
+          ssh_keys:
+            type: list
+            elements: str
+            description: Public SSH keys.
+          sudo_nopasswd:
+            type: bool
+            default: false
+            description: Grant NOPASSWD sudo.
+          password_hash:
+            type: str
+            description: SHA-512 password hash, ideally from ansible-vault.
+      users_default_shell:
+        type: str
+        default: /bin/bash
+        description: Shell used when a user does not set one.
+      users_default_groups:
+        type: list
+        elements: str
+        default: []
+        description: Groups used when a user does not set any.
+      users_ssh_keys_exclusive:
+        type: bool
+        default: true
+        description: Remove keys that are not listed.
+      users_remove_home:
+        type: bool
+        default: false
+        description: Delete the home directory of removed users.

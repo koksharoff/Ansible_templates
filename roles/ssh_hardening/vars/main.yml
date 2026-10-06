@@ -1,0 +1,2 @@
+---
+ssh_hardening_socket_activated: "{{ (ssh_hardening_socket.status.UnitFileState | default('')) == 'enabled' }}"

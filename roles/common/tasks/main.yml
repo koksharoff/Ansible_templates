@@ -1,0 +1,30 @@
+---
+- name: Packages
+  ansible.builtin.import_tasks: packages.yml
+  tags: [packages]
+
+- name: Hostname
+  ansible.builtin.import_tasks: hostname.yml
+  when: common_manage_hostname | bool
+  tags: [hostname]
+
+- name: Time and NTP
+  ansible.builtin.import_tasks: time.yml
+  tags: [time]
+
+- name: Locale
+  ansible.builtin.import_tasks: locale.yml
+  tags: [locale]
+
+- name: Kernel parameters
+  ansible.builtin.import_tasks: sysctl.yml
+  tags: [sysctl]
+
+- name: Journald
+  ansible.builtin.import_tasks: journald.yml
+  tags: [journald]
+
+- name: MOTD
+  ansible.builtin.import_tasks: motd.yml
+  when: common_motd_enabled | bool
+  tags: [motd]

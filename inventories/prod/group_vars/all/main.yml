@@ -1,0 +1,57 @@
+---
+# Variables for every host in the PROD environment.
+# They override role defaults (roles/*/defaults/main.yml).
+# Secrets go to vault.yml next to this file (see README, "Secrets").
+
+server_environment: prod
+
+# --- Connection ---------------------------------------------------------------
+# Automation user created by playbooks/bootstrap.yml; all other playbooks use it.
+system_bootstrap_user: bootstrap_agent
+ansible_user: "{{ system_bootstrap_user }}"
+
+# One place to change the SSH port: sshd, UFW, fail2ban and Ansible follow it.
+server_ssh_port: 22
+ansible_port: "{{ server_ssh_port }}"
+ssh_hardening_port: "{{ server_ssh_port }}"
+firewall_ssh_port: "{{ server_ssh_port }}"
+fail2ban_sshd_port: "{{ server_ssh_port }}"
+
+# REQUIRED: public keys allowed to log in as the automation user.
+admin_ssh_keys: []
+#  - "ssh-ed25519 AAAAC3Nza... admin@laptop"
+system_bootstrap_ssh_keys: "{{ admin_ssh_keys }}"
+
+# --- Admin accounts -----------------------------------------------------------
+users_list: []
+#  - name: alice
+#    comment: "Alice Smith"
+#    groups: [sudo]
+#    ssh_keys: "{{ admin_ssh_keys }}"
+#    password_hash: "{{ vault_users_alice_password_hash }}"
+
+# --- Common -------------------------------------------------------------------
+common_timezone: "UTC"
+common_journald_system_max_use: "2G"
+common_journald_max_retention: "3month"
+
+# --- SSH ----------------------------------------------------------------------
+ssh_hardening_max_auth_tries: 3
+ssh_hardening_allow_tcp_forwarding: false
+
+# --- Firewall -----------------------------------------------------------------
+# Strongly recommended: allow SSH only from a VPN / bastion network.
+# Make sure the machine running Ansible is inside it before changing this.
+firewall_ssh_allowed_sources:
+  - any
+#  - 10.0.0.0/8
+
+# --- fail2ban -----------------------------------------------------------------
+fail2ban_maxretry: 3
+fail2ban_bantime: "24h"
+# fail2ban_ignoreip: [127.0.0.1/8, "::1", 10.0.0.0/8]
+
+# --- Updates ------------------------------------------------------------------
+# Security patches are installed automatically, reboots are planned manually.
+unattended_upgrades_automatic_reboot: false
+# unattended_upgrades_mail: "ops@example.com"

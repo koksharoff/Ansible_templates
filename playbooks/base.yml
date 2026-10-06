@@ -1,0 +1,29 @@
+---
+# Baseline configuration applied to every server in every environment.
+# Environment differences live in inventories/<env>/group_vars, not here.
+- name: Apply base server configuration
+  hosts: all
+  become: true
+
+  pre_tasks:
+    - name: Verify the operating system is supported
+      ansible.builtin.assert:
+        that:
+          - ansible_facts['os_family'] == 'Debian'
+        fail_msg: "Only Debian/Ubuntu are supported, got {{ ansible_facts['distribution'] }}"
+        quiet: true
+      tags: [always]
+
+  roles:
+    - role: common
+      tags: [common]
+    - role: users
+      tags: [users]
+    - role: ssh_hardening
+      tags: [ssh]
+    - role: firewall
+      tags: [firewall]
+    - role: fail2ban
+      tags: [fail2ban]
+    - role: unattended_upgrades
+      tags: [updates]

@@ -1,0 +1,15 @@
+---
+- name: Set hostname
+  ansible.builtin.hostname:
+    name: "{{ common_hostname }}"
+    use: systemd
+
+- name: Map hostname in /etc/hosts
+  ansible.builtin.lineinfile:
+    path: /etc/hosts
+    regexp: '^127\.0\.1\.1\s'
+    line: >-
+      127.0.1.1 {{ (common_hostname ~ '.' ~ common_domain ~ ' ') if common_domain else '' }}{{ common_hostname }}
+    owner: root
+    group: root
+    mode: "0644"

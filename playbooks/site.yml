@@ -1,0 +1,12 @@
+---
+# Main entry point: everything that should be true for an environment.
+#
+#   ansible-playbook -i inventories/<env>/hosts.yml playbooks/site.yml
+- name: Base configuration
+  ansible.builtin.import_playbook: base.yml
+
+# Add service playbooks below as the project grows, e.g.:
+# - name: Web servers
+#   ansible.builtin.import_playbook: web.yml
+# - name: Database servers
+#   ansible.builtin.import_playbook: db.yml

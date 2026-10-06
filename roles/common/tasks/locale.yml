@@ -1,0 +1,15 @@
+---
+- name: Generate locale
+  community.general.locale_gen:
+    name: "{{ common_locale }}"
+    state: present
+
+- name: Set default locale
+  ansible.builtin.lineinfile:
+    path: /etc/default/locale
+    regexp: "^LANG="
+    line: "LANG={{ common_locale }}"
+    create: true
+    owner: root
+    group: root
+    mode: "0644"

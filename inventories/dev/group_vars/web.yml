@@ -1,0 +1,5 @@
+---
+# Web servers: HTTP/HTTPS open to the world.
+firewall_allowed_tcp_ports:
+  - 80
+  - 443

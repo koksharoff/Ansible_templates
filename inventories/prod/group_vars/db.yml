@@ -1,0 +1,7 @@
+---
+# Database servers: PostgreSQL reachable only from the application network.
+firewall_rules:
+  - port: 5432
+    proto: tcp
+    src: 198.51.100.0/24
+    comment: "PostgreSQL from app network"

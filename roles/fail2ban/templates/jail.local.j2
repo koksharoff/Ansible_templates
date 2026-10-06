@@ -1,0 +1,22 @@
+# {{ ansible_managed }}
+
+[DEFAULT]
+bantime  = {{ fail2ban_bantime }}
+findtime = {{ fail2ban_findtime }}
+maxretry = {{ fail2ban_maxretry }}
+bantime.increment = {{ 'true' if fail2ban_bantime_increment else 'false' }}
+ignoreip = {{ fail2ban_ignoreip | join(' ') }}
+backend  = {{ fail2ban_backend }}
+banaction = {{ fail2ban_banaction }}
+
+[sshd]
+enabled = {{ 'true' if fail2ban_sshd_enabled else 'false' }}
+port    = {{ fail2ban_sshd_port }}
+mode    = {{ fail2ban_sshd_mode }}
+{% for jail in fail2ban_jails %}
+
+[{{ jail.name }}]
+{% for key, value in jail.items() if key != 'name' %}
+{{ key }} = {{ value }}
+{% endfor %}
+{% endfor %}

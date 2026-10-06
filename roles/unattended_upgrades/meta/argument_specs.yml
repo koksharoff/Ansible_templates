@@ -1,0 +1,46 @@
+---
+argument_specs:
+  main:
+    short_description: Automatic security updates
+    options:
+      unattended_upgrades_enabled:
+        type: bool
+        default: true
+        description: Enable periodic automatic upgrades.
+      unattended_upgrades_origins:
+        type: list
+        elements: str
+        description: Origins-Pattern entries. Defaults to security updates for the current distribution.
+      unattended_upgrades_default_origins:
+        type: dict
+        description: Default origins per distribution.
+      unattended_upgrades_package_blacklist:
+        type: list
+        elements: str
+        default: []
+        description: Packages (regex) that are never upgraded automatically.
+      unattended_upgrades_remove_unused_dependencies:
+        type: bool
+        default: true
+        description: Remove unused dependencies after upgrade.
+      unattended_upgrades_remove_unused_kernels:
+        type: bool
+        default: true
+        description: Remove old kernel packages.
+      unattended_upgrades_automatic_reboot:
+        type: bool
+        default: false
+        description: Reboot automatically when required.
+      unattended_upgrades_automatic_reboot_time:
+        type: str
+        default: "04:00"
+        description: Time of the automatic reboot.
+      unattended_upgrades_mail:
+        type: str
+        default: ""
+        description: Report recipient. Empty = no mail.
+      unattended_upgrades_mail_report:
+        type: str
+        choices: [always, only-on-error, on-change]
+        default: on-change
+        description: When to send the mail report.

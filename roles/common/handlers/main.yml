@@ -1,0 +1,15 @@
+---
+- name: Restart cron
+  ansible.builtin.service:
+    name: cron
+    state: restarted
+
+- name: Restart chrony
+  ansible.builtin.service:
+    name: chrony
+    state: restarted
+
+- name: Restart journald
+  ansible.builtin.service:
+    name: systemd-journald
+    state: restarted

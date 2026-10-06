@@ -1,0 +1,43 @@
+# {{ ansible_managed }}
+
+Port {{ ssh_hardening_port }}
+{% for address in ssh_hardening_listen_addresses %}
+ListenAddress {{ address }}
+{% endfor %}
+
+# Authentication
+PermitRootLogin {{ ssh_hardening_permit_root_login }}
+PubkeyAuthentication {{ 'yes' if ssh_hardening_pubkey_authentication else 'no' }}
+PasswordAuthentication {{ 'yes' if ssh_hardening_password_authentication else 'no' }}
+KbdInteractiveAuthentication {{ 'yes' if ssh_hardening_kbd_interactive_authentication else 'no' }}
+PermitEmptyPasswords {{ 'yes' if ssh_hardening_permit_empty_passwords else 'no' }}
+MaxAuthTries {{ ssh_hardening_max_auth_tries }}
+MaxSessions {{ ssh_hardening_max_sessions }}
+LoginGraceTime {{ ssh_hardening_login_grace_time }}
+{% if ssh_hardening_allow_users %}
+AllowUsers {{ ssh_hardening_allow_users | join(' ') }}
+{% endif %}
+{% if ssh_hardening_allow_groups %}
+AllowGroups {{ ssh_hardening_allow_groups | join(' ') }}
+{% endif %}
+
+# Sessions
+ClientAliveInterval {{ ssh_hardening_client_alive_interval }}
+ClientAliveCountMax {{ ssh_hardening_client_alive_count_max }}
+
+# Forwarding
+X11Forwarding {{ 'yes' if ssh_hardening_x11_forwarding else 'no' }}
+AllowTcpForwarding {{ 'yes' if ssh_hardening_allow_tcp_forwarding else 'no' }}
+AllowAgentForwarding {{ 'yes' if ssh_hardening_allow_agent_forwarding else 'no' }}
+
+LogLevel {{ ssh_hardening_log_level }}
+{% if ssh_hardening_ciphers %}
+
+Ciphers {{ ssh_hardening_ciphers | join(',') }}
+{% endif %}
+{% if ssh_hardening_macs %}
+MACs {{ ssh_hardening_macs | join(',') }}
+{% endif %}
+{% if ssh_hardening_kex_algorithms %}
+KexAlgorithms {{ ssh_hardening_kex_algorithms | join(',') }}
+{% endif %}

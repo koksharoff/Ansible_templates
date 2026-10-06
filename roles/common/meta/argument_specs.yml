@@ -1,0 +1,80 @@
+---
+argument_specs:
+  main:
+    short_description: Baseline OS configuration
+    options:
+      common_apt_cache_valid_time:
+        type: int
+        default: 3600
+        description: Seconds before the apt cache is considered stale.
+      common_upgrade_packages:
+        type: bool
+        default: false
+        description: Run a safe apt upgrade on every play.
+      common_packages:
+        type: list
+        elements: str
+        description: Baseline packages.
+      common_packages_extra:
+        type: list
+        elements: str
+        default: []
+        description: Extra packages for an environment or group.
+      common_packages_absent:
+        type: list
+        elements: str
+        default: []
+        description: Packages that must be removed.
+      common_manage_hostname:
+        type: bool
+        default: true
+        description: Manage hostname and the 127.0.1.1 entry in /etc/hosts.
+      common_hostname:
+        type: str
+        description: Short hostname. Defaults to inventory_hostname_short.
+      common_domain:
+        type: str
+        default: ""
+        description: Optional domain used to build the FQDN in /etc/hosts.
+      common_timezone:
+        type: str
+        default: UTC
+        description: System timezone, e.g. Europe/Moscow.
+      common_ntp_enabled:
+        type: bool
+        default: true
+        description: Install and configure chrony.
+      common_ntp_pools:
+        type: list
+        elements: str
+        description: NTP pools used by chrony.
+      common_locale:
+        type: str
+        default: en_US.UTF-8
+        description: Locale to generate and set as LANG.
+      common_sysctl_defaults:
+        type: dict
+        description: Baseline kernel parameters.
+      common_sysctl:
+        type: dict
+        default: {}
+        description: Kernel parameters merged on top of common_sysctl_defaults.
+      common_sysctl_file:
+        type: str
+        default: /etc/sysctl.d/90-ansible.conf
+        description: File where kernel parameters are persisted.
+      common_journald_system_max_use:
+        type: str
+        default: 500M
+        description: journald SystemMaxUse.
+      common_journald_max_retention:
+        type: str
+        default: 1month
+        description: journald MaxRetentionSec.
+      common_motd_enabled:
+        type: bool
+        default: true
+        description: Install an /etc/motd banner with host and environment.
+      common_motd_environment:
+        type: str
+        description: Environment name shown in the MOTD. Defaults to server_environment.

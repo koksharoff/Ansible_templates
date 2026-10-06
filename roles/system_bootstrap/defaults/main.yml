@@ -1,0 +1,26 @@
+---
+# Name of the automation user that Ansible will use after bootstrap
+system_bootstrap_user: "bootstrap_agent"
+
+# Login shell and supplementary groups of the automation user
+system_bootstrap_user_shell: "/bin/bash"
+system_bootstrap_user_groups:
+  - sudo
+
+# Public SSH keys allowed to log in as the automation user (at least one is required).
+# Keep real keys in inventories/<env>/group_vars/all/main.yml, not here.
+system_bootstrap_ssh_keys: []
+#  - "ssh-ed25519 AAAAC3Nza... admin@laptop"
+
+# Remove any key that is not listed above from authorized_keys
+system_bootstrap_ssh_keys_exclusive: true
+
+# Grant passwordless sudo (required for unattended Ansible runs)
+system_bootstrap_passwordless_sudo: true
+
+# Optional password hash for console access. Empty = password login stays locked.
+# Generate with: mkpasswd -m sha-512   (keep the result in ansible-vault)
+system_bootstrap_user_password_hash: ""
+
+# Install python3 via raw commands if it is missing (fresh minimal images)
+system_bootstrap_install_python: true

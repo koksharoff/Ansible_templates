@@ -1,0 +1,57 @@
+---
+argument_specs:
+  main:
+    short_description: Host firewall with UFW
+    options:
+      firewall_enabled:
+        type: bool
+        default: true
+        description: Enable UFW.
+      firewall_default_incoming:
+        type: str
+        choices: [allow, deny, reject]
+        default: deny
+        description: Default policy for inbound traffic.
+      firewall_default_outgoing:
+        type: str
+        choices: [allow, deny, reject]
+        default: allow
+        description: Default policy for outbound traffic.
+      firewall_default_routed:
+        type: str
+        choices: [allow, deny, reject]
+        default: deny
+        description: Default policy for routed traffic.
+      firewall_logging:
+        type: str
+        choices: ["on", "off", low, medium, high, full]
+        default: low
+        description: UFW logging level.
+      firewall_ssh_port:
+        type: int
+        default: 22
+        description: SSH port that is always allowed.
+      firewall_ssh_allowed_sources:
+        type: list
+        elements: str
+        default: [any]
+        description: Networks allowed to reach SSH.
+      firewall_ssh_rate_limit:
+        type: bool
+        default: true
+        description: Use UFW "limit" for SSH.
+      firewall_allowed_tcp_ports:
+        type: list
+        elements: raw
+        default: []
+        description: TCP ports or ranges (e.g. "8000:8010") open from anywhere.
+      firewall_allowed_udp_ports:
+        type: list
+        elements: raw
+        default: []
+        description: UDP ports or ranges open from anywhere.
+      firewall_rules:
+        type: list
+        elements: dict
+        default: []
+        description: Custom rules with port, proto, src, dest, rule and comment keys.

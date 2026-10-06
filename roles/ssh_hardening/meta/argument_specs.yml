@@ -1,0 +1,101 @@
+---
+argument_specs:
+  main:
+    short_description: Harden the OpenSSH server
+    options:
+      ssh_hardening_port:
+        type: int
+        default: 22
+        description: Port sshd listens on.
+      ssh_hardening_listen_addresses:
+        type: list
+        elements: str
+        default: []
+        description: Addresses sshd binds to. Empty = all.
+      ssh_hardening_permit_root_login:
+        type: str
+        choices: ["no", "yes", "prohibit-password", "forced-commands-only"]
+        default: "no"
+        description: PermitRootLogin value.
+      ssh_hardening_password_authentication:
+        type: bool
+        default: false
+        description: Allow password logins.
+      ssh_hardening_kbd_interactive_authentication:
+        type: bool
+        default: false
+        description: Allow keyboard-interactive logins.
+      ssh_hardening_pubkey_authentication:
+        type: bool
+        default: true
+        description: Allow public key logins.
+      ssh_hardening_permit_empty_passwords:
+        type: bool
+        default: false
+        description: Allow empty passwords.
+      ssh_hardening_max_auth_tries:
+        type: int
+        default: 3
+        description: MaxAuthTries.
+      ssh_hardening_max_sessions:
+        type: int
+        default: 10
+        description: MaxSessions.
+      ssh_hardening_login_grace_time:
+        type: int
+        default: 30
+        description: LoginGraceTime in seconds.
+      ssh_hardening_client_alive_interval:
+        type: int
+        default: 300
+        description: ClientAliveInterval in seconds.
+      ssh_hardening_client_alive_count_max:
+        type: int
+        default: 2
+        description: ClientAliveCountMax.
+      ssh_hardening_x11_forwarding:
+        type: bool
+        default: false
+        description: Allow X11 forwarding.
+      ssh_hardening_allow_tcp_forwarding:
+        type: bool
+        default: false
+        description: Allow TCP port forwarding.
+      ssh_hardening_allow_agent_forwarding:
+        type: bool
+        default: false
+        description: Allow ssh-agent forwarding.
+      ssh_hardening_log_level:
+        type: str
+        choices: [QUIET, FATAL, ERROR, INFO, VERBOSE, DEBUG]
+        default: VERBOSE
+        description: sshd LogLevel.
+      ssh_hardening_allow_users:
+        type: list
+        elements: str
+        default: []
+        description: AllowUsers. Empty = no restriction.
+      ssh_hardening_allow_groups:
+        type: list
+        elements: str
+        default: []
+        description: AllowGroups. Empty = no restriction.
+      ssh_hardening_ciphers:
+        type: list
+        elements: str
+        default: []
+        description: Ciphers override. Empty = OpenSSH defaults.
+      ssh_hardening_macs:
+        type: list
+        elements: str
+        default: []
+        description: MACs override. Empty = OpenSSH defaults.
+      ssh_hardening_kex_algorithms:
+        type: list
+        elements: str
+        default: []
+        description: KexAlgorithms override. Empty = OpenSSH defaults.
+      ssh_hardening_config_file:
+        type: str
+        default: /etc/ssh/sshd_config.d/00-hardening.conf
+        description: Path of the managed drop-in file.

@@ -1,0 +1,60 @@
+---
+- name: Validate role input
+  ansible.builtin.assert:
+    that:
+      - system_bootstrap_ssh_keys | length > 0
+    fail_msg: >-
+      system_bootstrap_ssh_keys is empty. Add at least one public key,
+      otherwise you will be locked out once SSH password login is disabled.
+    quiet: true
+
+- name: Ensure python3 is installed
+  ansible.builtin.raw: test -e /usr/bin/python3 || (apt-get update -qq && apt-get install -y -qq python3)
+  register: system_bootstrap_python
+  changed_when: "'Setting up python3' in system_bootstrap_python.stdout"
+  when: system_bootstrap_install_python | bool
+
+- name: Gather facts
+  ansible.builtin.setup:
+
+- name: Ensure sudo is installed
+  ansible.builtin.apt:
+    name: sudo
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Create automation user
+  ansible.builtin.user:
+    name: "{{ system_bootstrap_user }}"
+    state: present
+    shell: "{{ system_bootstrap_user_shell }}"
+    create_home: true
+    groups: "{{ system_bootstrap_user_groups }}"
+    append: true
+    password: "{{ system_bootstrap_user_password_hash | default(omit, true) }}"
+    update_password: on_create
+
+- name: Authorize SSH keys for automation user
+  ansible.posix.authorized_key:
+    user: "{{ system_bootstrap_user }}"
+    key: "{{ system_bootstrap_ssh_keys | join('\n') }}"
+    exclusive: "{{ system_bootstrap_ssh_keys_exclusive }}"
+    state: present
+
+# sudo ignores files in /etc/sudoers.d whose names contain a dot
+- name: Configure passwordless sudo for automation user
+  ansible.builtin.copy:
+    content: "{{ system_bootstrap_user }} ALL=(ALL:ALL) NOPASSWD: ALL\n"
+    dest: "/etc/sudoers.d/{{ system_bootstrap_user | replace('.', '_') }}"
+    owner: root
+    group: root
+    mode: "0440"
+    validate: /usr/sbin/visudo -cf %s
+  when: system_bootstrap_passwordless_sudo | bool
+
+- name: Remove passwordless sudo for automation user
+  ansible.builtin.file:
+    path: "/etc/sudoers.d/{{ system_bootstrap_user | replace('.', '_') }}"
+    state: absent
+  when: not system_bootstrap_passwordless_sudo | bool

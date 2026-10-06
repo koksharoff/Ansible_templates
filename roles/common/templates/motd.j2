@@ -1,0 +1,8 @@
+{% set env = common_motd_environment | upper %}
+
+  Host:        {{ common_hostname }}
+  Environment: {{ env }}{% if env == 'PROD' %}  *** PRODUCTION - be careful ***{% endif %}
+
+
+  {{ ansible_managed }}
+

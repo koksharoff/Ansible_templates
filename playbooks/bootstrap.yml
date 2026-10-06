@@ -1,0 +1,17 @@
+---
+# First run on a freshly provisioned server.
+# Connects as root (or the cloud image default user, e.g. "ubuntu"/"debian"),
+# installs Python and creates the automation user that every other playbook uses.
+#
+#   ansible-playbook -i inventories/dev/hosts.yml playbooks/bootstrap.yml
+#   ansible-playbook -i inventories/dev/hosts.yml playbooks/bootstrap.yml -e bootstrap_remote_user=ubuntu
+#   ansible-playbook -i inventories/dev/hosts.yml playbooks/bootstrap.yml --ask-pass   # root with password
+- name: Bootstrap fresh servers
+  hosts: all
+  gather_facts: false
+  become: true
+  vars:
+    ansible_user: "{{ bootstrap_remote_user | default('root') }}"
+  roles:
+    - role: system_bootstrap
+      tags: [bootstrap]

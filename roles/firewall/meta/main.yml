@@ -1,0 +1,21 @@
+---
+galaxy_info:
+  author: Vyacheslav Koksharov
+  description: Host firewall with UFW - default deny inbound, SSH always reachable
+  license: MIT
+  min_ansible_version: "2.15"
+  platforms:
+    - name: Ubuntu
+      versions:
+        - jammy
+        - noble
+    - name: Debian
+      versions:
+        - bookworm
+        - trixie
+  galaxy_tags:
+    - firewall
+    - ufw
+    - security
+
+dependencies: []

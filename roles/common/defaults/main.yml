@@ -1,0 +1,84 @@
+---
+# --- Packages ---------------------------------------------------------------
+common_apt_cache_valid_time: 3600
+
+# Run "apt upgrade" (safe) on every play. Usually off: updates are handled by unattended_upgrades.
+common_upgrade_packages: false
+
+# Baseline packages installed on every server
+common_packages:
+  - apt-transport-https
+  - bash-completion
+  - ca-certificates
+  - cron
+  - curl
+  - dnsutils
+  - git
+  - gnupg
+  - htop
+  - jq
+  - less
+  - locales
+  - lsof
+  - rsync
+  - tmux
+  - unzip
+  - vim
+  - wget
+
+# Extra packages for a specific environment or group (set in group_vars)
+common_packages_extra: []
+
+# Packages that must not be present
+common_packages_absent: []
+
+# --- Hostname ---------------------------------------------------------------
+common_manage_hostname: true
+common_hostname: "{{ inventory_hostname_short }}"
+# Optional FQDN, written to /etc/hosts together with the short name
+common_domain: ""
+
+# --- Time -------------------------------------------------------------------
+common_timezone: "UTC"
+common_ntp_enabled: true
+common_ntp_pools:
+  - pool.ntp.org
+
+# --- Locale -----------------------------------------------------------------
+common_locale: "en_US.UTF-8"
+
+# --- Kernel parameters ------------------------------------------------------
+# Baseline network hardening. Override single keys through common_sysctl.
+common_sysctl_defaults:
+  net.ipv4.conf.all.accept_redirects: 0
+  net.ipv4.conf.default.accept_redirects: 0
+  net.ipv4.conf.all.secure_redirects: 0
+  net.ipv4.conf.default.secure_redirects: 0
+  net.ipv4.conf.all.send_redirects: 0
+  net.ipv4.conf.default.send_redirects: 0
+  net.ipv4.conf.all.accept_source_route: 0
+  net.ipv4.conf.default.accept_source_route: 0
+  net.ipv4.conf.all.rp_filter: 1
+  net.ipv4.conf.default.rp_filter: 1
+  net.ipv4.conf.all.log_martians: 1
+  net.ipv4.icmp_echo_ignore_broadcasts: 1
+  net.ipv4.tcp_syncookies: 1
+  net.ipv6.conf.all.accept_redirects: 0
+  net.ipv6.conf.default.accept_redirects: 0
+  kernel.dmesg_restrict: 1
+  kernel.kptr_restrict: 2
+  fs.suid_dumpable: 0
+
+# Environment/group specific values, merged on top of common_sysctl_defaults
+common_sysctl: {}
+
+common_sysctl_file: /etc/sysctl.d/90-ansible.conf
+
+# --- Journald ---------------------------------------------------------------
+common_journald_system_max_use: "500M"
+common_journald_max_retention: "1month"
+
+# --- MOTD -------------------------------------------------------------------
+# Shows host name and environment on login. Set server_environment in group_vars.
+common_motd_enabled: true
+common_motd_environment: "{{ server_environment | default('unknown') }}"

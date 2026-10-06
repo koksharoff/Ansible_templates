@@ -1,0 +1,28 @@
+---
+unattended_upgrades_enabled: true
+
+# Allowed origins. Default: security updates only, per distribution.
+unattended_upgrades_origins: "{{ unattended_upgrades_default_origins[ansible_facts['distribution']] | default([]) }}"
+
+unattended_upgrades_default_origins:
+  Ubuntu:
+    - "origin=Ubuntu,archive=${distro_codename}-security,label=Ubuntu"
+    - "origin=UbuntuESMApps,archive=${distro_codename}-apps-security"
+    - "origin=UbuntuESM,archive=${distro_codename}-infra-security"
+  Debian:
+    - "origin=Debian,codename=${distro_codename}-security,label=Debian-Security"
+    - "origin=Debian,codename=${distro_codename},label=Debian-Security"
+
+# Packages that must never be upgraded automatically (regex)
+unattended_upgrades_package_blacklist: []
+
+unattended_upgrades_remove_unused_dependencies: true
+unattended_upgrades_remove_unused_kernels: true
+
+# Reboot automatically when an update requires it (e.g. kernel)
+unattended_upgrades_automatic_reboot: false
+unattended_upgrades_automatic_reboot_time: "04:00"
+
+# Send a report by mail (requires a working MTA). Empty = disabled.
+unattended_upgrades_mail: ""
+unattended_upgrades_mail_report: "on-change"

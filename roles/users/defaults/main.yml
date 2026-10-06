@@ -1,0 +1,23 @@
+---
+# Human/admin accounts. Example:
+#
+# users_list:
+#   - name: alice
+#     comment: "Alice Smith"
+#     groups: [sudo]
+#     ssh_keys:
+#       - "ssh-ed25519 AAAAC3Nza... alice@laptop"
+#     sudo_nopasswd: false
+#     password_hash: "{{ vault_users_alice_password_hash }}"   # optional, from ansible-vault
+#   - name: bob
+#     state: absent                                             # removes the account
+users_list: []
+
+users_default_shell: /bin/bash
+users_default_groups: []
+
+# Remove keys that are not listed in ssh_keys
+users_ssh_keys_exclusive: true
+
+# Delete the home directory when a user is set to state: absent
+users_remove_home: false
